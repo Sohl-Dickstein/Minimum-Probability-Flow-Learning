@@ -1,4 +1,6 @@
-% compares the log likelihood of training data under RBMs trained via Minimum Probability Flow learning, pseudolikelihood, CD-1, and CD-10
+% - generates a weight matrix for an RBM, and then generates samples from that RBM
+% - using the generated sample, trains RBMs using Minimum Probability Flow learning, pseudolikelihood, CD-1, and CD-10
+% - compares the log likelihood of the samples for each of the training techniques
 
 % Author: Jascha Sohl-Dickstein (2010)
 % Web: http://redwood.berkeley.edu/wiki/Jascha_Sohl-Dickstein
@@ -8,7 +10,7 @@
 
 d_vis = 10; % number of units in the visible layer
 d_hid = 10; % number of units in the hidden layer
-batch_size = 100;
+batch_size = 100; % number of training samples to generate
 
 CD_steps = 10000; % number of CD learning steps to do
 CD_eta = 0.01; % eta to use for stochastic gradient descent for CD
@@ -16,7 +18,7 @@ CD_eta = 0.01; % eta to use for stochastic gradient descent for CD
 fprintf( 'choosing random RBM\n' );
 tic();
 Wtrue = 4*randn( d_hid+1, d_vis+1 ) / sqrt(d_vis+1);
-independent_steps = 200
+independent_steps = 200 % how many steps to go between samples
 fprintf( 'generating data samples\n' );
 X = sample_RBM( Wtrue, batch_size, independent_steps, independent_steps, rand( d_vis, 1 ) > 0.5 );
 X = X > rand(size(X));
@@ -108,4 +110,4 @@ fprintf( 'computing log likelihood\n' );
 L_cd10wd = compute_log_likelihood( X, Wcd10wd )
 toc()
 
-fprintf( '\nLog likelihoods (larger is better):\ninitialized\t %f\nMPF \t\t %f\nCD1 \t\t %f\nCD10 \t\t %f\nCD1 wd\t\t %f\nCD10 wd\t\t %f\npseudolikelihood %f\ntrue params\t %f\n\n', L_init, L_mpf, L_cd1, L_cd10, L_cd1wd, L_cd10wd, L_pl, L_true );
+fprintf( '\nLog likelihoods (more positive is better):\ninitialized\t %f\nMPF \t\t %f\nCD1 \t\t %f\nCD10 \t\t %f\nCD1 wd\t\t %f\nCD10 wd\t\t %f\npseudolikelihood %f\ntrue params\t %f\n\n', L_init, L_mpf, L_cd1, L_cd10, L_cd1wd, L_cd10wd, L_pl, L_true );

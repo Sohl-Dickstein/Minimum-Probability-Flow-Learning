@@ -1,3 +1,4 @@
+% draw samples from an RBM
 % this outputs probabilities of activations, not activations!!!
 
 % Author: Jascha Sohl-Dickstein (2009)
