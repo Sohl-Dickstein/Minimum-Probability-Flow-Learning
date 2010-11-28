@@ -1,0 +1,5 @@
+Contains code to do parameter estimation for RBMs using Minimum Probability Flow learning, pseudolikelihood and Contrastive Divergence
+
+Also contains code comparing the log likelihood of training data under RBMs trained via Minimum Probability Flow learning, pseudolikelihood, CD-1, and CD-10, for small RBMs.
+
+See runme_compare.m for an example of how to use the code.
