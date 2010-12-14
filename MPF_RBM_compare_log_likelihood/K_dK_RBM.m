@@ -1,5 +1,4 @@
-% MPF learning, with transitions allowed between all states differing by a
-% single bit flip
+% MPF objective function and gradient for RBM, with transitions allowed between all states differing by a single bit flip
 
 % Author: Jascha Sohl-Dickstein (2009)
 % Web: http://redwood.berkeley.edu/wiki/Jascha_Sohl-Dickstein
