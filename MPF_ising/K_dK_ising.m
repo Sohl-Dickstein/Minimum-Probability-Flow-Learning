@@ -17,9 +17,11 @@ function [K, dK] = K_dK_ising( J, X )
     J = (J + J')/2;
 
     Y = J*X;
-    diagJ = diag(J); 
+    diagJ = diag(J);
+    % XnotX contains (X - [bit flipped X])
     XnotX = 2*X-1;
-    Kfull = exp(XnotX .* Y - (1/2)*diagJ(:,ones(1,nbatch)));
+    % Kfull is a [ndims, nbatch] matrix containing the contribution to the objective function from flipping each bit in the rows, for each datapoint on the columns
+    Kfull = exp(XnotX .* Y - (1/2)*diagJ(:,ones(1,nbatch))); 
     K = sum(Kfull(:));
     
     lt = Kfull.*XnotX;
