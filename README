@@ -1,6 +1,9 @@
-This repository contains publicly released code related to my research.
+This repository contains Matlab code implementing Minimum Probability
+Flow learning for several cases, specifically:
 
-All the software provided here is released under a Creative Commons Attribution-Noncommercial License - http://creativecommons.org/licenses/by-nc/3.0/us/ .  If you would like access under a less restrictive license, contact me and I will almost certainly accomodate.
-
-Jascha Sohl-Dickstein
-jascha@berkeley.edu
+    MPF_ising/ - parameter estimation in the Ising model
+    MPF_RBM_compare_log_likelihood/ - parameter estimation in
+        Restricted Boltzmann Machines. This directory also includes
+        code comparing the log likelihood of small RBMs trained via
+        pseudolikelihood and Contrastive Divergence to ones trained
+        via MPF..
