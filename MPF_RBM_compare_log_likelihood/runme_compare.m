@@ -8,11 +8,23 @@
 % Attribution-Noncommercial License.
 % (http://creativecommons.org/licenses/by-nc/3.0/)
 
+
+if ~exist('L_init_hist')
+    L_init_hist = [];
+    L_mpf_hist = [];
+    L_cd1_hist = [];
+    L_cd10_hist = [];
+    L_cd1wd_hist = [];
+    L_cd10wd_hist = [];
+    L_pl_hist = [];
+    L_true_hist = [];
+end
+
 d_vis = 10; % number of units in the visible layer
 d_hid = 10; % number of units in the hidden layer
 batch_size = 100; % number of training samples to generate
 
-CD_steps = 10000; % number of CD learning steps to do
+CD_steps = 20000; % number of CD learning steps to do
 CD_eta = 0.01; % eta to use for stochastic gradient descent for CD
 
 fprintf( 'choosing random RBM\n' );
@@ -111,3 +123,12 @@ L_cd10wd = compute_log_likelihood( X, Wcd10wd )
 toc()
 
 fprintf( '\nLog likelihoods (more positive is better):\ninitialized\t %f\nMPF \t\t %f\nCD1 \t\t %f\nCD10 \t\t %f\nCD1 wd\t\t %f\nCD10 wd\t\t %f\npseudolikelihood %f\ntrue params\t %f\n\n', L_init, L_mpf, L_cd1, L_cd10, L_cd1wd, L_cd10wd, L_pl, L_true );
+
+L_init_hist = [L_init_hist, L_init];
+L_mpf_hist = [L_mpf_hist, L_mpf];
+L_cd1_hist = [L_cd1_hist, L_cd1];
+L_cd10_hist = [L_cd10_hist, L_cd10];
+L_cd1wd_hist = [L_cd1wd_hist, L_cd1wd];
+L_cd10wd_hist = [L_cd10wd_hist, L_cd10wd];
+L_pl_hist = [L_pl_hist, L_pl];
+L_true_hist = [L_true_hist, L_true];
