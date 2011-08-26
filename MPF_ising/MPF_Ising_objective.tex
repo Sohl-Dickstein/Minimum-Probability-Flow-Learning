@@ -1,0 +1,113 @@
+\documentclass{article} 
+\newcommand{\set}[1]{\lbrace #1 \rbrace}
+\newcommand{\setc}[2]{\lbrace #1 \mid #2 \rbrace}
+\newcommand{\vv}[1]{{\mathbf{#1}}}
+\newcommand{\dd}{{\mathrm{d}}}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pdn}[3]{\frac{\partial^#1 #2}{\partial #3^#1}}
+\newcommand{\od}[2]{\frac{\dd #1}{\dd #2}}
+\newcommand{\odn}[3]{\frac{\dd^#1 #2}{\dd #3^#1}}
+\newcommand{\avg}[1]{\left< #1 \right>}
+\newcommand{\mb}{\mathbf}
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+
+\usepackage{times}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+
+\title{MPF objective function for an Ising model}
+
+\author{
+Jascha Sohl-Dickstein
+}
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}} 
+
+\begin{document}
+
+\maketitle
+
+This document derives the MPF objective function for the case of an Ising model, and connections to all states which differ by a single bit flip.  It is written quickly, and not well proofread!!  Typos and missing steps are likely...
+
+For the Ising model, the energy function is
+\begin{align}
+E = \mb x^T \mb J \mb x
+\end{align}
+where $\mb x \in \left\{ 0, 1 \right\}^N$, $\mb J \in \mathcal R^{N\times N}$, and $\mb J$ is symmetric ($\mb J = \mb J^T$).
+The MPF objective function is
+\begin{align}
+K = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
+E(\mb x) - E(\mb x + {\mb d}(\mb x, n)) \right] \right)
+\end{align}
+where the sum over $d$ indicates a sum over all data dimensions, and the function ${\mb d}(\mb x, n) \in \left\{ -1, 0, 1 \right\}^N$ is
+\begin{align}
+{\mb d}(\mb x, n)_i =
+	\left\{\begin{array}{ccc}
+0 & & i \neq n \\
+-(2 x_i - 1) & & i = n
+	\end{array}\right.
+\end{align}
+
+For the Ising model, the MPF objective function becomes
+\begin{align}
+K & = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
+\mb x^T \mb J \mb x
+- (\mb x + {\mb d}(\mb x, n))^T \mb J (\mb x + {\mb d}(\mb x, n))
+\right] \right) \\
+& = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
+\mb x^T \mb J \mb x
+- \left(
+\mb x^T \mb J \mb x
++
+2 \mb x^T \mb J {\mb d}(\mb x, n)
++
+{\mb d}(\mb x, n)^T \mb J {\mb d}(\mb x, n)
+\right) 
+\right] \right)
+ \\
+& = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( -\frac{1}{2}\left[
+2 \mb x^T \mb J {\mb d}(\mb x, n)
++
+{\mb d}(\mb x, n)^T \mb J {\mb d}(\mb x, n)
+\right]
+\right)  \\
+& = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( -\frac{1}{2}\left[
+2 \sum_i x_i J_{in} \left( 1 - 2 x_n  \right)
++
+J_{nn}
+\right]
+\right)\\
+& = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \left[
+\left( 2 x_n - 1 \right) \sum_i x_i J_{in}
+-
+\frac{1}{2}J_{nn}
+\right]
+\right)
+.
+\end{align}
+Ignoring the symmetry constraint on $\mb J$, the derivative is
+\begin{align}
+\left[ \pd{K}{J_{lm}} \right]^{\mathrm{asymmetric}} & = \sum_{\mb x \in \mathcal D} \exp\left( \left[
+\left( 2 x_m - 1 \right) \sum_i x_i J_{im}
+-
+\frac{1}{2}J_{mm}
+\right]
+\right)
+%\times \nonumber \\ & \qquad \qquad
+	\left[
+		\left( 2 x_m - 1 \right) x_l
+		-
+		\delta_{lm} \frac{1}{2}
+	\right]
+.
+\end{align}
+Enforcing symmetry, the derivative is
+\begin{align}
+\pd{K}{J_{lm}}  = \frac{1}{2}\left[ \pd{K}{J_{lm}} \right]^{\mathrm{asymmetric}} +\frac{1}{2}\left[ \pd{K}{J_{ml}} \right]^{\mathrm{asymmetric}}
+.
+\end{align}
+
+Note that both the objective function and gradient can be calculated using matrix operations (no for loops).  See the code.
+		
+\end{document}

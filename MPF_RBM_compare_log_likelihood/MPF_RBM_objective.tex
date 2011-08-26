@@ -1,0 +1,76 @@
+\documentclass{article} 
+\newcommand{\set}[1]{\lbrace #1 \rbrace}
+\newcommand{\setc}[2]{\lbrace #1 \mid #2 \rbrace}
+\newcommand{\vv}[1]{{\mathbf{#1}}}
+\newcommand{\dd}{{\mathrm{d}}}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pdn}[3]{\frac{\partial^#1 #2}{\partial #3^#1}}
+\newcommand{\od}[2]{\frac{\dd #1}{\dd #2}}
+\newcommand{\odn}[3]{\frac{\dd^#1 #2}{\dd #3^#1}}
+\newcommand{\avg}[1]{\left< #1 \right>}
+
+\newcommand{\mb}{\mathbf}
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\ham}[2]{\operatornamewithlimits{HAM}\left( #1 ; #2 \right)}
+
+
+\usepackage{times}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+
+\title{MPF objective function for an RBM}
+
+\author{
+Jascha Sohl-Dickstein
+}
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}} 
+
+\begin{document}
+
+\maketitle
+
+This document derives the MPF objective function for the case of an RBM, and connections to all states which differ by a single bit flip.  It is written quickly, and not well proofread!!  Typos and missing steps are likely...
+
+The energy function over the visible
+units for an RBM is found by marginalizing out the hidden units.  This
+gives an energy function of:
+\begin{align}
+E(\mb x) &= -\sum_i \log ( 1 + \exp ( -W_i \mb x ) )
+\end{align}
+where $W_i$ is a vector of coupling parameters and $\mb x$ is the binary input
+vector.  The MPF objective function for this is
+\begin{align}
+K &= \sum_{\mb x \in \mathcal D} \sum_d \exp\left( \frac{1}{2}\left[
+E(\mb x) - E(\mb x + \delta(\mb x, d)) \right] \right)
+\end{align}
+where the sum over $d$ indicates a sum over all data dimensions, and
+the function $\delta(\mb x, d)$ is
+\begin{align}
+\delta(\mb x, d)_i =
+	\left\{\begin{array}{ccc}
+0 & & i \neq d \\
+-(2 x_i - 1) & & i = d
+	\end{array}\right.
+\end{align}
+
+Substituting into the objective function
+\begin{align}
+K = \sum_{\mb x \in \mathcal D} \sum_d \exp\left( \frac{1}{2}\left[
+-\sum_i \log ( 1 + \exp ( -W_i \mb x ) )
++
+\sum_i \log ( 1 + \exp ( -W_i \mb x + W_i \delta(\mb x, d)  ) )
+\right] \right)
+\end{align}
+
+The released matlab code implements the sum over $d$ in a for loop, and
+calculates the change in $W_i \mb x$ caused by $W_i \delta( \mb x, d
+)$ for all samples simultaneously.  (This is a minor savings - only one column of $W$ needs to be visited).  (Note that the for loop could also
+be done over samples, with the change induced by each bit flip being
+calculated by matrix operations.  If the code is run with a small
+batch size, this implementation would be faster.)  Though I could not
+see a way to replace both for loops with matrix operations, a more
+clever programmer might!
+		
+\end{document}
