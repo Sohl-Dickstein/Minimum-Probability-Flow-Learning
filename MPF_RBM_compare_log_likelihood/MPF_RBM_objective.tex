@@ -42,31 +42,30 @@ E(\mb x) &= -\sum_i \log ( 1 + \exp ( -W_i \mb x ) )
 where $W_i$ is a vector of coupling parameters and $\mb x$ is the binary input
 vector.  The MPF objective function for this is
 \begin{align}
-K &= \sum_{\mb x \in \mathcal D} \sum_d \exp\left( \frac{1}{2}\left[
-E(\mb x) - E(\mb x + \delta(\mb x, d)) \right] \right)
+K &= \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
+E(\mb x) - E(\mb x + {\mb d}(\mb x, n)) \right] \right)
 \end{align}
-where the sum over $d$ indicates a sum over all data dimensions, and
-the function $\delta(\mb x, d)$ is
+where the sum over $n$ indicates a sum over all data dimensions, and
+the function ${\mb d}(\mb x, n)$ is
 \begin{align}
-\delta(\mb x, d)_i =
+{\mb d}(\mb x, n)_i =
 	\left\{\begin{array}{ccc}
-0 & & i \neq d \\
--(2 x_i - 1) & & i = d
+0 & & i \neq n \\
+-(2 x_i - 1) & & i = n
 	\end{array}\right.
 \end{align}
 
 Substituting into the objective function
 \begin{align}
-K = \sum_{\mb x \in \mathcal D} \sum_d \exp\left( \frac{1}{2}\left[
+K = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
 -\sum_i \log ( 1 + \exp ( -W_i \mb x ) )
 +
-\sum_i \log ( 1 + \exp ( -W_i \mb x + W_i \delta(\mb x, d)  ) )
+\sum_i \log ( 1 + \exp ( -W_i \mb x + W_i {\mb d}(\mb x, n)  ) )
 \right] \right)
 \end{align}
 
-The released matlab code implements the sum over $d$ in a for loop, and
-calculates the change in $W_i \mb x$ caused by $W_i \delta( \mb x, d
-)$ for all samples simultaneously.  (This is a minor savings - only one column of $W$ needs to be visited).  (Note that the for loop could also
+The released matlab code implements the sum over $n$ in a for loop, and
+calculates the change in $W_i \mb x$ caused by $W_i {\mb d}( \mb x, n)$ for all samples simultaneously.  (This is a minor savings - only one column of $W$ needs to be visited).  (Note that the for loop could also
 be done over samples, with the change induced by each bit flip being
 calculated by matrix operations.  If the code is run with a small
 batch size, this implementation would be faster.)  Though I could not
