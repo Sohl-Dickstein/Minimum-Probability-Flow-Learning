@@ -40,7 +40,7 @@ The MPF objective function is
 K = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
 E(\mb x) - E(\mb x + {\mb d}(\mb x, n)) \right] \right)
 \end{align}
-where the sum over $d$ indicates a sum over all data dimensions, and the function ${\mb d}(\mb x, n) \in \left\{ -1, 0, 1 \right\}^N$ is
+where the sum over $n$ indicates a sum over all data dimensions, and the function ${\mb d}(\mb x, n) \in \left\{ -1, 0, 1 \right\}^N$ is
 \begin{align}
 {\mb d}(\mb x, n)_i =
 	\left\{\begin{array}{ccc}
@@ -86,27 +86,41 @@ J_{nn}
 \right)
 .
 \end{align}
-Ignoring the symmetry constraint on $\mb J$, the derivative is
+
+Assume the symmetry constraint on $\mb J$ is enforced by writing it in terms of a another possibly asymmetric matrix $\mb J' \in \mathcal R^{N\times N}$,
 \begin{align}
-\left[ \pd{K}{J_{lm}} \right]^{\mathrm{asymmetric}} & = \sum_{\mb x \in \mathcal D} \exp\left( \left[
-\left( 2 x_m - 1 \right) \sum_i x_i J_{im}
+\mb J = \frac{1}{2} \mb J' + \frac{1}{2} \mb {J'}^T
+.
+\end{align}
+The derivative of the MPF objective function with respect to $\mb J'$ is
+\begin{align}
+\pd{K}{{J'}_{lm}}  & =
+\frac{1}{2}\sum_{\mb x \in \mathcal D} \exp\left( \left[
+\left( 2 x_m - 1 \right) \sum_i x_i {J}_{im}
 -
-\frac{1}{2}J_{mm}
+\frac{1}{2}{J}_{mm}
 \right]
 \right)
-%\times \nonumber \\ & \qquad \qquad
 	\left[
 		\left( 2 x_m - 1 \right) x_l
 		-
 		\delta_{lm} \frac{1}{2}
+	\right] \nonumber \\ & \qquad 
++
+\frac{1}{2}\sum_{\mb x \in \mathcal D} \exp\left( \left[
+\left( 2 x_l - 1 \right) \sum_i x_i {J}_{il}
+-
+\frac{1}{2}{J}_{ll}
+\right]
+\right)
+	\left[
+		\left( 2 x_l - 1 \right) x_m
+		-
+		\delta_{ml} \frac{1}{2}
 	\right]
-.
+,
 \end{align}
-Enforcing symmetry, the derivative is
-\begin{align}
-\pd{K}{J_{lm}}  = \frac{1}{2}\left[ \pd{K}{J_{lm}} \right]^{\mathrm{asymmetric}} +\frac{1}{2}\left[ \pd{K}{J_{ml}} \right]^{\mathrm{asymmetric}}
-.
-\end{align}
+where the second term is simply the first term with indices $l$ and $m$ reversed.
 
 Note that both the objective function and gradient can be calculated using matrix operations (no for loops).  See the code.
 		
