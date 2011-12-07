@@ -2,7 +2,7 @@
 
 % this code is written under the greatly accelerating assumption that samples in the data vector differ from each other by more than one bit flip (see http://arxiv.org/abs/0906.4779).  this is nearly always true for large systems, but means you'll get funny answers if you do a test run with a system of only a few units with lots of data.
 
-% for the ising model case, calculating the energy change resulting from flipping a single bit only requires looking at a single column/row of the coupling matrix J (see jpegs of board for derivation - soon to TeX-ed).  this means that with some matrix operations and dense matlab code, the MPF objective function can be greatly accelerated. the code below is optimized to do this ... at the cost of making it tougher to read ...
+% for the ising model case, calculating the energy change resulting from flipping a single bit only requires looking at a single column/row of the coupling matrix J (see MPF_Ising_objective.pdf).  this means that with some matrix operations and dense matlab code, the MPF objective function can be greatly accelerated. the code below is optimized to do this ... at the cost of making it tougher to read ...
 
 % Author: Jascha Sohl-Dickstein (2009)
 % Web: http://redwood.berkeley.edu/wiki/Jascha_Sohl-Dickstein
