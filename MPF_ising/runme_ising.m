@@ -35,6 +35,8 @@ end
 J = randn( d, d ) / sqrt(d) * 3.;
 J = J + J';
 J = J/2;
+J = J - diag(diag(J)); % set the diagonal so all the units are 0 bias
+J = J - diag(sum(J));
 fprintf( 'Generating %d training samples\n', nsamples );
 burnin = 100*d;
 % and generate the test data ...
