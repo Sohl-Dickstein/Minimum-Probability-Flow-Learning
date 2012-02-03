@@ -6,7 +6,7 @@
 % Attribution-Noncommercial License.
 % (http://creativecommons.org/licenses/by-nc/3.0/)
 
-description = 'd=50, 10000 samples, 1500 learning steps'
+description = 'd=50, 10000 samples'
 
 % initialize
 obfun = 'K_dK_ising';
