@@ -23,7 +23,7 @@ function [L, dL] = L_dL_ising( J, X )
 
     % get the energy for all possible states
     E_all = sum( X_all.*(J*X_all) );
-    E_offset = min(E_all); % this is to keep the exponential below in a reasonable range -- if the weight matrix is large, then the energy can become very negative, and the exponential of the negative energy can exceed the range allowed by floating point.  so we add (and then later subtract) a constant so that the smallest energy is 0
+    E_offset = -min(E_all); % this is to keep the exponential below in a reasonable range -- if the weight matrix is large, then the energy can become very negative, and the exponential of the negative energy can exceed the range allowed by floating point.  so we add (and then later subtract) a constant so that the smallest energy is 0
     potential_all = exp( -(E_all+E_offset) ); % caclulate the potential function for all patterns    
     Z = sum( potential_all ); % calculate the partition function (actually, this is Z*exp(E_offset) )
 
