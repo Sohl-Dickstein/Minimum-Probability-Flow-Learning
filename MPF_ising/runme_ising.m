@@ -54,7 +54,18 @@ Jnew = Jnew/2;
 % perform parameter estimation
 fprintf( '\nRunning minFunc for up to %d learning steps...\n', maxlinesearch );
 t_min = tic();
-Jnew = minFunc( @K_dK_ising, Jnew(:), minf_options, Xall );
+
+%%%%%%%%%%% choose one of these two Ising model objective functions %%%%%%%%%%%%%
+% K_dK_ising is slightly faster, and includes connectivity only to states
+% which differ by a single bit flip.
+%Jnew = minFunc( @K_dK_ising, Jnew(:), minf_options, Xall );
+% K_dK_ising_allbitflipextension corresponds to a slightly modified choice
+% of connectivity for MPF. This modified connectivity includes an
+% additional connection between each state and the state which is reached
+% by flipping all bits.  This connectivity pattern performs better in cases
+% (like neural spike trains) where activity is extremely sparse.
+Jnew = minFunc( @K_dK_ising_allbitflipextension, Jnew(:), minf_options, Xall );
+
 Jnew = reshape(Jnew, size(J));
 t_min = toc(t_min);
 fprintf( 'parameter estimation in %f seconds \n', t_min );

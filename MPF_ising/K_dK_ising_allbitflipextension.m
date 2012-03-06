@@ -15,8 +15,9 @@
 % for large systems, but means you'll get funny answers if you do a test
 % run with a system of only a few units with lots of data.
 %
-% see MPF_Ising_objective.pdf for a derivation of this objective (not
-% including the all bit flip addition)
+% see MPF_Ising_objective.pdf for a derivation of this objective
+% (MPF_Ising_objective.pdf has not yet been updated to include a
+% description of the all-bits-flipped modified connectivity)
 %
 % Author: Jascha Sohl-Dickstein (2012)
 % Web: http://redwood.berkeley.edu/wiki/Jascha_Sohl-Dickstein
