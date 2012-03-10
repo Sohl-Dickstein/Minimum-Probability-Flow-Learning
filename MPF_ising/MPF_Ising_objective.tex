@@ -28,19 +28,39 @@ Jascha Sohl-Dickstein
 
 \maketitle
 
-This document derives the MPF objective function for the case of an Ising model, and connections to all states which differ by a single bit flip. % It is written quickly, and not well proofread!!  Typos and missing steps are likely...
+This document derives the MPF objective function for the case of an Ising model.  In Section \ref{sec single bit}, connectivity is set between all states which differ by a single bit flip.  In Section \ref{sec all bit}, an additional connection is included between states which differ in all bits.  This additional connection is particularly beneficial in cases (such as spike train data) where unit activity is extremely sparse.
 
-For the Ising model, the energy function is
-\begin{align}
-E = \mb x^T \mb J \mb x
-\end{align}
-where $\mb x \in \left\{ 0, 1 \right\}^N$, $\mb J \in \mathcal R^{N\times N}$, and $\mb J$ is symmetric ($\mb J = \mb J^T$).
 The MPF objective function is
 \begin{align}
-K = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
-E(\mb x) - E(\mb x + {\mb d}(\mb x, n)) \right] \right)
+K\left( \mb J \right) & = \sum_{\mb x \in \mathcal D} \sum_{\mb x' \notin \mathcal D} g\left( \mb x, \mb x' \right) \exp\left( \frac{1}{2}\left[
+E(\mb x; \mb J ) - E(\mb x'; \mb J) \right] \right)
+,
 \end{align}
-where the sum over $n$ indicates a sum over all data dimensions, and the function ${\mb d}(\mb x, n) \in \left\{ -1, 0, 1 \right\}^N$ is
+where $g\left( \mb x, \mb x' \right) = g\left( \mb x', \mb x \right) \in \left\{ 0, 1 \right\}$ is the connectivity function, $E(\mb x; \mb J )$ is an energy function parameterized by $\mb J$, and $\mathcal D$ is the list of data states.  For the Ising model, the energy function is
+\begin{align}
+E\left( \mb x; \mb J\right) = \mb x^T \mb J \mb x
+\end{align}
+where $\mb x \in \left\{ 0, 1 \right\}^N$, $\mb J \in \mathcal R^{N\times N}$, and $\mb J$ is symmetric ($\mb J = \mb J^T$).
+
+\section{Single bit flips}\label{sec single bit}
+
+We consider the case where the connectivity function $g\left( \mb x, \mb x' \right)$ is set to connect all states which differ by a single bit flip,
+\begin{align}
+g\left( \mb x, \mb x' \right)
+ =
+	\left\{\begin{array}{ccrl}
+1 & & \mb x \mathrm{\ and\ } \mb x' \mathrm{\ differ\ by\ a\ single\ bit\ flip,\ }  & \sum_n \left| x_n - x_n' \right| = 1  \\
+0 & & \mathrm{otherwise} & 
+	\end{array}\right.
+\label{trans}
+.
+\end{align}
+The MPF objective function in this case is
+\begin{align}
+K\left( \mb J \right) = \sum_{\mb x \in \mathcal D} \sum_{n=1}^N \exp\left( \frac{1}{2}\left[
+E(\mb x; \mb J) - E(\mb x + {\mb d}(\mb x, n); \mb J) \right] \right)
+\end{align}
+where the sum over $n$ is a sum over all data dimensions, and the bit flipping function ${\mb d}(\mb x, n) \in \left\{ -1, 0, 1 \right\}^N$ is
 \begin{align}
 {\mb d}(\mb x, n)_i =
 	\left\{\begin{array}{ccc}
@@ -49,9 +69,9 @@ where the sum over $n$ indicates a sum over all data dimensions, and the functio
 	\end{array}\right.
 \end{align}
 
-For the Ising model, the MPF objective function becomes
+For the Ising model, this MPF objective function becomes (using the fact that $\mb J = \mb J^T$)
 \begin{align}
-K & = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
+K\left( \mb J \right) & = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
 \mb x^T \mb J \mb x
 - (\mb x + {\mb d}(\mb x, n))^T \mb J (\mb x + {\mb d}(\mb x, n))
 \right] \right) \\
@@ -84,17 +104,18 @@ J_{nn}
 \frac{1}{2}J_{nn}
 \right]
 \right)
+\label{K final single bit}
 .
 \end{align}
 
-Assume the symmetry constraint on $\mb J$ is enforced by writing it in terms of a another possibly asymmetric matrix $\mb J' \in \mathcal R^{N\times N}$,
+Assume the symmetry constraint on $\mb J$ is enforced by writing it in terms of another possibly asymmetric matrix $\mb J' \in \mathcal R^{N\times N}$,
 \begin{align}
 \mb J = \frac{1}{2} \mb J' + \frac{1}{2} \mb {J'}^T
 .
 \end{align}
 The derivative of the MPF objective function with respect to $\mb J'$ is
 \begin{align}
-\pd{K}{{J'}_{lm}}  & =
+\pd{K\left( \mb J' \right)}{{J'}_{lm}}  & =
 \frac{1}{2}\sum_{\mb x \in \mathcal D} \exp\left( \left[
 \left( 2 x_m - 1 \right) \sum_i x_i {J}_{im}
 -
@@ -123,5 +144,58 @@ The derivative of the MPF objective function with respect to $\mb J'$ is
 where the second term is simply the first term with indices $l$ and $m$ reversed.
 
 Note that both the objective function and gradient can be calculated using matrix operations (no for loops).  See the code.
+
+\section{All bits flipped}\label{sec all bit}
+
+We consider the case where the connectivity function $g\left( \mb x, \mb x' \right)$ is set to connect all states which differ by a single bit flip, and all states which differ in all bits,
+\begin{align}
+g\left( \mb x, \mb x' \right)
+ =
+	\left\{\begin{array}{ccrl}
+1 & & \mb x \mathrm{\ and\ } \mb x' \mathrm{\ differ\ by\ a\ single\ bit\ flip,\ } & \sum_n \left| x_n - x_n' \right| = 1 \\ %\exists n\ (\mb x' = \mb x + {\mb d}(\mb x, n)) \\
+1 & & \mb x \mathrm{\ and\ } \mb x' \mathrm{\ differ\ in\ all\ bits,\ } & \sum_n \left| x_n - x_n' \right| = N \\ %\mb x' = \neg \mb x\\
+0 & & \mathrm{otherwise} & 
+	\end{array}\right.
+\label{trans}
+.
+\end{align}
+This extension to the connectivity function aids MPF in assigning the correct relative probabilities between data states and states on the opposite side of the state space from the data, even in cases (such as sparsely active units) where the data lies only in a very small region of the state space.
+
+The modified objective function has the form, 
+\begin{align}
+K\left( \mb J \right) & = K_{single}\left( \mb J \right) + K_{all}\left( \mb J \right)
+.
+\end{align}
+We can take the first term, which deals only with single bit flips, from Equation \ref{K final single bit},
+\begin{align}
+K_{single}\left( \mb J \right) & = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \left[
+\left( 2 x_n - 1 \right) \sum_i x_i J_{in}
+-
+\frac{1}{2}J_{nn}
+\right]
+\right)
+.
+\end{align}
+The second term is
+\begin{align}
+K_{all} & = \sum_{\mb x \in \mathcal D} \exp\left( \frac{1}{2}\left[
+E(\mb x; \mb J) - E(\mb 1 - \mb x; \mb J) \right] \right) \\
+& = \sum_{\mb x \in \mathcal D} \exp\left( \frac{1}{2}\left[
+\mb x^T \mb J \mb x - 
+\left( \mb 1 - \mb x\right)^T \mb J \left( \mb 1 - \mb x\right) \right] \right)
+,
+\end{align}
+where $\mb 1$ is the vector of all ones.
+
+The contribution to the derivative from the second term is
+\begin{align}
+\pd{K_{all}}{J_{lm}} & = \frac{1}{2}\sum_{\mb x \in \mathcal D} \exp\left( \frac{1}{2}\left[
+\mb x^T \mb J \mb x - 
+\left( \mb 1 - \mb x\right)^T \mb J \left( \mb 1 - \mb x\right) \right] \right)
+\left[
+x_l x_m - \left( 1 - x_l \right) \left( 1 - x_m \right)
+\right]
+.
+\end{align}
 		
 \end{document}
