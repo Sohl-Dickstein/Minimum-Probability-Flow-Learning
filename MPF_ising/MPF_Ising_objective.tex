@@ -161,6 +161,8 @@ g\left( \mb x, \mb x' \right)
 \end{align}
 This extension to the connectivity function aids MPF in assigning the correct relative probabilities between data states and states on the opposite side of the state space from the data, even in cases (such as sparsely active units) where the data lies only in a very small region of the state space.
 
+MPF functions by comparing the relative probabilities of the data states and the states which are connected to the data states.  If there is a region of state space in which no data lives, and to which no data states are connected, then MPF is blind to that region of state space, and may assign an incorrect probability to it.  This problem has been observed fitting an Ising model to sparsely active neural data.  In this case, MPF assigns too much probability to states with many units on simultaneously.  However, if an additional connection is added between each state and the state with all the bits flipped, then there are comparison states available which have many units on simultaneously.  With this extra connection, MPF better penalizes non-sparse states, and the fit gets much better.
+
 The modified objective function has the form, 
 \begin{align}
 K\left( \mb J \right) & = K_{single}\left( \mb J \right) + K_{all}\left( \mb J \right)
