@@ -9,7 +9,6 @@
 description = 'd=50, 10000 samples'
 
 % initialize
-obfun = 'K_dK_ising';
 d = 50; % number of units
 nsamples = 10000; % number of training samples
 maxlinesearch = 10000; % this number is excessive just to be safe!!!!!! learning works fine if this is just a few hundred
@@ -130,7 +129,7 @@ title( '{C}_{ } - {C}_{new}' );
 
 figure();
 plot( Corr(:), Corrnew(:), '.' );
-axis([-cmn,cmx,-cmn,cmx]);
+axis([cmn,cmx,cmn,cmx]);
 axis image;
 xlabel( '{C}_{ }' );
 ylabel( '{C}_{new}' );
