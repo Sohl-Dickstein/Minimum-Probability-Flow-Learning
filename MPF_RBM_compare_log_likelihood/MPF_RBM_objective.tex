@@ -60,7 +60,7 @@ Substituting into the objective function
 K = \sum_{\mb x \in \mathcal D} \sum_n \exp\left( \frac{1}{2}\left[
 -\sum_i \log ( 1 + \exp ( -W_i \mb x ) )
 +
-\sum_i \log ( 1 + \exp ( -W_i \mb x + W_i {\mb d}(\mb x, n)  ) )
+\sum_i \log ( 1 + \exp ( -W_i \left(  \mb x + {\mb d}(\mb x, n) \right) ) )
 \right] \right)
 \end{align}
 
