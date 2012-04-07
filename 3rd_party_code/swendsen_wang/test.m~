@@ -1,0 +1,18 @@
+% Initialize BM S-W sampler (not native-BM, uses Ising conversion internally)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    weights = [0 -1;...
+               0  0]
+    biases = [0.3; 1.5]
+
+    nn = length(biases);
+    state = (rand(nn,1) < 0.5);
+cum_state = zeros(size(ising_state));
+cum_prob = zeros(size(ising_state));
+
+% GO!
+iters = 10000;
+for i=1:iters
+    [state, cprobs] = sw_allall_bm(state, weights, biases, 1);
+    cum_state = cum_state + (state==1);
+    cum_prob = cum_prob + cprobs;
+end

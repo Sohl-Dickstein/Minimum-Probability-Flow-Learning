@@ -1,0 +1,23 @@
+Enclosed is slow and dumb code for performing Swendsen-Wang sampling on
+generalised Ising models.
+
+*** 
+*** On no account use this code for performance testing of Swendsen-Wang, I just
+*** wasn't clever enough to run off a decent Matlab version before switching to C.
+*** Also none of this has been tested that thoroughly. It comes with *no* guarantees.
+*** 
+
+See an overview in Radford Neal's MCMC tech. report. Or the Sokal and Edwards
+generalisation in physical review. The check-coalescense version is even slower,
+but allows you to see if different initial conditions ever couple together,
+which might be useful for convergence analysis. Search for work on "bounding
+chains" for Swendsen Wang to understand this.
+
+Note that the clusters from Swendsen-Wang can give very pretty pictures (see the
+pdf files). The one at zero temperature indicates how it can be very bad with
+many negative couplings. The whole system has locked together and can only flip,
+but not change structure. Even with positive-only couplings Swendsen-Wang can be
+slow to mix. However, on Ising models it is *amazing* and I imagine it is pretty
+useful in many machine learning problems --- especially in vision.
+
+Iain Murray 2004

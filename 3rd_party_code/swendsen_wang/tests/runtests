@@ -1,0 +1,3 @@
+rm -f a.out
+gcc -DMYTESTING -O2 -ansi -pedantic -Wall -g test_percolation.c sw_allall_flip_conditionals.c -lm
+valgrind --leak-check=full ./a.out

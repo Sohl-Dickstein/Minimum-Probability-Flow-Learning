@@ -1,0 +1,149 @@
+Contents
+--------
+1. Background
+2. Provided code
+3. Known rough edges
+4. BibTeX entries for the references
+
+
+1. Background
+-------------
+
+The algorithm of Swendsen and Wang (1987) provides amazingly fast updates on
+classical Potts/Ising models on a grid. The original paper mentions some
+generalizations, although the exposition of Edwards and Sokal (1988) makes it
+very clear how to derive Swendsen-Wang like algorithms for many models.
+
+Although the Swendsen-Wang algorithm (S-W) is quite broadly applicable in
+theory, it won't work well on some distributions. The oft-cited papers for this
+observation are by Gore and Jerrum (1997, 1999). These works describe problems
+with a 1st order phase transition which would also break Gibbs sampling and any
+standard MCMC method. It is also fairly well known that "frustrated" systems can
+break S-W, even in some cases where Gibbs sampling works fine. I have seen
+Boltzmann Machine models fitted to images that won't move at all with S-W but
+mix fine with Gibbs sampling. I've also seen it work much better than Gibbs
+sampling (Stern et al., 2004). S-W is a really neat algorithm, but you have to
+work out if your problem is appropriate.
+
+
+2. Provided code
+----------------
+
+This directory contains code for S-W sampling on fully-connected undirected
+graphs of binary variables with pairwise potentials and site biases. This class
+of models includes Ising models and Boltzmann machines. The code is for an Ising
+model parameterization, {+1,-1} variables, but there is a wrapper for a
+Boltzmann machine parameterization involving {0,1} variables. The code supports
+non-fully connected graphs by setting weights to zero, it could be more
+efficient by dealing with sparse graphs properly however.
+
+The most expensive part of a S-W is (or should be) the percolation step. I used
+an algorithm by Newman and Ziff (2001). If the graph has special structure, then
+better algorithms may apply. For example there is a fast percolation method that
+has been used for S-W on planar graphs (Sweeny, 1983).
+
+Be very careful that the parameters (especially the weights matrix) that you are
+passing to the provided functions specify the distribution that you think they
+do. There are many different conventions for the parameters. I have tried to
+explain the conventions that I am using in the functions, but check on a tiny
+problem that we agree.
+
+The tests directory contains some very simple sanity checks. test_distribution.m
+should also help confirm what distributions my codes claim to sample from as it
+explicitly constructs the distributions for a tiny test problem to compare
+against. The tests directory also demonstrates how to estimate marginals via a
+so-called Rao-Blackwellization using conditional probabilities from the FKSW
+joint distribution identified by Edwards and Sokal.
+
+The orig directory contains an old, very first stab at Matlab code for
+Swendsen-Wang after I had just worked through the details for the first time.
+
+
+3. Known rough edges
+--------------------
+
+I should use Matlab's memory management functions in the mex file so I don't
+risk leaking memory if the code is interrupted.
+
+I shouldn't use the standard C library random number generator in the mex file.
+If you're serious about using this code, get around to replacing that line of
+code with a call to a decent generator.
+
+I haven't profiled the code, or worked on performance. Real problems won't have
+fully connected graphs and the code should exploit that.
+
+Look for better codes and let me know of URLs I should list here. There will be
+statistical physicists or vision people out there with better code.
+
+
+4. BibTeX entries for the references
+------------------------------------
+
+@article{swendsen1987,
+  title={Nonuniversal critical dynamics in {M}onte {C}arlo simulations},
+  author={Swendsen, R. H. and Wang, J. S.},
+  journal={Physical Review Letters},
+  volume={58},
+  number={2},
+  pages={86--88},
+  year={1987}
+}
+
+@article{edwards1988,
+  title={Generalizations of the {F}ortuin-{K}asteleyn-{S}wendsen-{W}ang representation and {M}onte {C}arlo algorithm},
+  author={Robert G. Edwards and A. D. Sokal},
+  journal={Physical Review},
+  volume={38},
+  pages={2009--2012},
+  year={1988}
+}
+
+@inproceedings{gore1997,
+  title={The {S}wendsen-{W}ang process does not always mix rapidly},
+  author={Gore, V. K. and Jerrum, M. R.},
+  booktitle={Proceedings of the twenty-ninth annual ACM symposium on Theory of computing},
+  pages={674--681},
+  year={1997},
+  publisher={ACM Press New York, NY, USA}
+}
+
+@article{gore1999,
+  title={The {S}wendsen--{W}ang process does not always mix rapidly},
+  author={Gore, V. K. and Jerrum, M. R.},
+  journal={Journal of Statistical Physics},
+  volume={97},
+  number={1},
+  pages={67--86},
+  year={1999}
+}
+
+@inproceedings{stern2004,
+  title={Modelling uncertainty in the game of go},
+  author={David Stern and Thore Graepel and David J. C. MacKay},
+  booktitle={Advances in Neural Information Processing Systems (NIPS*17): Proceedings of the 2004 Conference},
+  editor={Lawrence K. Saul and Yair Weiss and L{\'e}on Bottou},
+  year={2005},
+  publisher={MIT Press}
+}
+
+@article{newman2001,
+  title={Fast {M}onte {C}arlo algorithm for site or bond percolation},
+  author={M. E. J. Newman and R. M. Ziff},
+  journal={Physical Review E},
+  volume={64},
+  number={016706},
+  month={June},
+  year={2001},
+  url={http://prola.aps.org/abstract/PRE/v64/i1/e016706}
+}
+
+@article{sweeny1983,
+  title={{M}onte {C}arlo study of weighted percolation clusters relevant to the {P}otts models},
+  author={Mark Sweeny},
+  journal={Physical Review B},
+  volume={27},
+  number={7},
+  pages={4445--4455},
+  year={1983},
+  url={http://prola.aps.org/abstract/PRB/v27/i7/p4445_1}
+}
