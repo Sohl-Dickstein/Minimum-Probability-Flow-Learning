@@ -8,6 +8,9 @@
 % Attribution-Noncommercial License.
 % (http://creativecommons.org/licenses/by-nc/3.0/)
 
+% make experiments repeatable
+rng(0);
+
 d_vis = 10; % number of units in the visible layer
 d_hid = 10; % number of units in the hidden layer
 batch_size = 100; % number of training samples to generate
