@@ -8,4 +8,4 @@ Flow learning for several cases, specifically:
         pseudolikelihood and Contrastive Divergence to ones trained
         via MPF..
 
-If you're interesting in using MPF to build an Ising model of neural spike data, you should check out Liberty Hamilton's Github at https://github.com/libertyh/ising-model.
+If you're interesting in using MPF to build an Ising model of neural spike data, you should check out Liberty Hamilton's repository at https://github.com/libertyh/ising-model.
